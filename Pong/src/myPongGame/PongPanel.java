@@ -18,6 +18,12 @@ package myPongGame;
 	   private final static Color BACKGROUND_COLOUR = Color.BLACK;
 
 	   private final static int TIMER_DELAY = 5;
+	   
+	   GameState gameState = GameState.INITIALISING;
+	   
+	   Paddle paddle1, paddle2;
+	     		
+	   Ball ball; 
 
 	   public PongPanel() {
 
@@ -26,8 +32,30 @@ package myPongGame;
 	   		Timer timer = new Timer(TIMER_DELAY, this);
 
 	   			timer.start();
-	   	
+	   			   	
 	    }
+	   
+	   public void createObjects() {
+           ball = new Ball(getWidth(), getHeight());
+           paddle1 = new Paddle(Player.One, getWidth(), getHeight());
+           paddle2 = new Paddle(Player.Two, getWidth(), getHeight());
+       }
+	   
+	   private void update() {
+		           switch(gameState) {
+		           case INITIALISING: {
+		                      createObjects();
+		                     gameState = GameState.PLAYING;
+		                      break;
+		                  }
+		                  case PLAYING: {
+		                     break;
+		                }
+		                case GAMEOVER: {
+		                    break;
+		                }
+		            }
+		        }
 	   
 	   private void paintDottedLine(Graphics g) {
 	   		Graphics2D g2d = (Graphics2D) g.create();
@@ -38,12 +66,11 @@ package myPongGame;
 	   			g2d.dispose();
 	   				 }
 	   
-	   
-	   @Override
-	  public void paintComponent(Graphics g) {
-	       super.paintComponent(g);
-	       paintDottedLine(g);
-	  }
+	   private void paintSprite(Graphics g, Sprite sprite) {
+	        g.setColor(sprite.getColour());
+	        g.fillRect(sprite.getxPosition(), sprite.getyPosition(), sprite.getWidth(), sprite.getHeight()); 
+
+	    }
 	   
       @Override
       public void keyPressed(KeyEvent event) {
@@ -63,4 +90,15 @@ package myPongGame;
     	  repaint();
       }
       
+      @Override
+      public void paintComponent(Graphics g) {
+          super.paintComponent(g);
+          paintDottedLine(g);
+          if(gameState != GameState.INITIALISING) {
+              paintSprite(g, ball);
+              paintSprite(g, paddle1);
+              paintSprite(g, paddle2);
+  
+          }
+      }
    }
